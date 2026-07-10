@@ -261,6 +261,9 @@
     if (reset) {
       state.items = [];
       state.offset = 0;
+      state.expandedDonations.clear();
+      const btn = document.getElementById('showAllCommentsBtn');
+      if (btn) btn.innerHTML = 'Lihat Semua Komentator »';
     }
 
     try {
@@ -374,6 +377,21 @@
         loadMessages({ reset: true });
       });
     });
+
+    const showAllBtn = document.getElementById('showAllCommentsBtn');
+    if (showAllBtn) {
+      showAllBtn.addEventListener('click', () => {
+        const hasAll = state.items.every((item) => state.expandedDonations.has(item.id));
+        if (hasAll && state.items.length > 0) {
+          state.expandedDonations.clear();
+          showAllBtn.innerHTML = 'Lihat Semua Komentator »';
+        } else {
+          state.items.forEach((item) => state.expandedDonations.add(item.id));
+          showAllBtn.innerHTML = 'Sembunyikan Komentar';
+        }
+        renderMessages();
+      });
+    }
 
     const loadMoreBtn = document.getElementById('loadMoreMessagesBtn');
     if (loadMoreBtn) {
