@@ -263,7 +263,7 @@ function renderPresets(presets) {
   presets.forEach((amount) => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'btn btn-outline btn-primary btn-lg';
+    btn.className = 'btn btn-outline btn-lg';
     btn.dataset.amount = amount;
     btn.innerHTML = `💸 <span class="font-bold">${formatShort(amount)}</span>`;
     btn.addEventListener('click', () => selectPreset(amount, btn));
@@ -275,18 +275,15 @@ function selectPreset(amount, btn) {
   state.selectedAmount = amount;
   document.getElementById('customAmount').value = '';
   // Highlight selected
-  document.querySelectorAll('#presetGrid button').forEach((b) => b.classList.remove('btn-primary'));
-  document.querySelectorAll('#presetGrid button').forEach((b) => b.classList.add('btn-outline'));
-  btn.classList.remove('btn-outline');
-  btn.classList.add('btn-primary');
+  document.querySelectorAll('#presetGrid button').forEach((b) => b.classList.remove('selected'));
+  btn.classList.add('selected');
   updateSawerBtn();
 }
 
 function clearPresetSelection() {
   state.selectedAmount = null;
   document.querySelectorAll('#presetGrid button').forEach((b) => {
-    b.classList.remove('btn-primary');
-    b.classList.add('btn-outline');
+    b.classList.remove('selected');
   });
 }
 

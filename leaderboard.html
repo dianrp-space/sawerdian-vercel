@@ -116,10 +116,11 @@
     <!-- Footer -->
     <footer class="footer footer-center bg-base-200 text-base-content/60 p-4 text-xs">
       <div>
-        <p id="footerText">© 2026 DRP Network</p>
+        <p id="footerText">© <span id="footerYear"></span> DRP Network</p>
       </div>
     </footer>
 
     <script src="/assets/js/leaderboard.js?v=2"></script>
+    <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
   </body>
 </html>

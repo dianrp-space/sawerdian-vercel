@@ -68,6 +68,7 @@
     items: [],
     offset: 0,
     total: 0,
+    visibleCount: 3,
     loading: false,
     donationOptions: [],
     expandedDonations: new Set(),
@@ -130,10 +131,12 @@
     if (!list) return;
     list.innerHTML = '';
 
-    if (!state.items.length) {
+    const visibleItems = state.items.slice(0, state.visibleCount);
+
+    if (!visibleItems.length) {
       list.innerHTML = `<div class="text-sm text-base-content/50 italic">Belum ada pesan pada periode ini.</div>`;
     } else {
-      state.items.forEach((item) => {
+      visibleItems.forEach((item) => {
         const card = document.createElement('div');
         card.className = 'card bg-base-200/60 shadow-sm';
         const comments = Array.isArray(item.comments) ? item.comments : [];
@@ -239,9 +242,14 @@
       countEl.textContent = `${state.items.length} pesan dimuat`;
     }
 
-    const moreBtn = document.getElementById('loadMoreMessagesBtn');
-    if (moreBtn) {
-      moreBtn.classList.toggle('hidden', state.items.length >= state.total);
+    const showAllBtn = document.getElementById('showAllCommentsBtn');
+    if (showAllBtn) {
+      if (state.visibleCount >= state.items.length) {
+        showAllBtn.classList.add('hidden');
+      } else {
+        showAllBtn.classList.remove('hidden');
+        showAllBtn.innerHTML = 'Lihat Komentar Lain »';
+      }
     }
   }
 
@@ -261,9 +269,8 @@
     if (reset) {
       state.items = [];
       state.offset = 0;
+      state.visibleCount = 3;
       state.expandedDonations.clear();
-      const btn = document.getElementById('showAllCommentsBtn');
-      if (btn) btn.innerHTML = 'Lihat Semua Komentator »';
     }
 
     try {
@@ -272,12 +279,10 @@
       );
       const newItems = (data.items || []).filter((item) => Boolean(item.message));
       
-      // Hanya ambil 3 teratas dengan nilai sawer terbesar
-      state.items = newItems.slice(0, 3);
+      state.items = newItems;
       state.total = state.items.length;
       state.offset = state.items.length;
 
-      // Rebuild options for "komentar baru" form (only donations with message + paid)
       state.donationOptions = state.items.map((item) => ({
         id: item.id,
         donorName: item.donorName,
@@ -381,21 +386,9 @@
     const showAllBtn = document.getElementById('showAllCommentsBtn');
     if (showAllBtn) {
       showAllBtn.addEventListener('click', () => {
-        const hasAll = state.items.every((item) => state.expandedDonations.has(item.id));
-        if (hasAll && state.items.length > 0) {
-          state.expandedDonations.clear();
-          showAllBtn.innerHTML = 'Lihat Semua Komentator »';
-        } else {
-          state.items.forEach((item) => state.expandedDonations.add(item.id));
-          showAllBtn.innerHTML = 'Sembunyikan Komentar';
-        }
+        state.visibleCount += 3;
         renderMessages();
       });
-    }
-
-    const loadMoreBtn = document.getElementById('loadMoreMessagesBtn');
-    if (loadMoreBtn) {
-      loadMoreBtn.addEventListener('click', () => loadMessages({ reset: false }));
     }
 
     const messagesList = document.getElementById('messagesList');

@@ -17,14 +17,14 @@ function formatPayload(type, event, donation, settings) {
   }).format(donation.amount);
 
   const donor = donation.donor_name || 'Anonim';
-  const message = donation.message ? `\n💬 ${donation.message}` : '';
+  const message = `\n💬 ${donation.message || 'Tanpa Pesan'}`;
   const isPaid = event === 'paid';
   const emoji = isPaid ? '💰' : '🆕';
   const title = isPaid ? 'Saweran Baru Masuk!' : 'Saweran Dibuat';
 
   const fields = [
     { name: '👤 Nama', value: donor, inline: true },
-    { name: '💬 Pesan', value: donation.message || '-', inline: false },
+    { name: '💬 Pesan', value: donation.message || 'Tanpa Pesan', inline: false },
     { name: '💵 Nominal', value: amount, inline: true },
     { name: '📅 Waktu', value: new Date(donation.created_at).toLocaleString('id-ID'), inline: true },
   ];

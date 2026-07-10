@@ -165,7 +165,7 @@
 
             <div class="text-center my-2">
               <button type="button" class="btn btn-outline btn-sm" id="showAllCommentsBtn">
-                Lihat Semua Komentator »
+                Lihat Komentar Lain »
               </button>
             </div>
 
@@ -180,12 +180,13 @@
     <!-- Footer -->
     <footer class="footer footer-center bg-base-200 text-base-content/60 p-4 text-xs mt-6">
       <div>
-        <p id="footerText">© 2026 Dian Rama Putra. All rights reserved.</p>
+        <p id="footerText">© <span id="footerYear"></span> Dian Rama Putra. All rights reserved.</p>
         <p class="opacity-60">Made with ❤️ by DRP</p>
       </div>
     </footer>
 
     <script src="/assets/js/sawer.js?v=2"></script>
     <script src="/assets/js/comments.js?v=2"></script>
+    <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
   </body>
 </html>

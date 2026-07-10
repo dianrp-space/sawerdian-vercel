@@ -554,8 +554,9 @@
 
       <!-- ==================== FOOTER ==================== -->
       <div class="mt-10 p-4 bg-base-200 rounded-lg text-center text-sm">
-        <p class="text-xs opacity-60 mt-1">Sawerdian &copy; 2026 &mdash; By Dian Rama Putra</p>
+        <p class="text-xs opacity-60 mt-1">Sawerdian &copy; <span id="footerYear"></span> &mdash; By Dian Rama Putra</p>
       </div>
     </main>
+    <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
   </body>
 </html>

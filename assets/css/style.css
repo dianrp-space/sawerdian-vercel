@@ -182,7 +182,7 @@ body.admin-page {
 /* Navbar */
 .navbar {
   border-bottom: var(--border-bold);
-  background: #fff !important;
+  background: transparent !important;
   box-shadow: 0 4px 0 0 #000;
 }
 
@@ -207,6 +207,12 @@ body.admin-page {
   background: var(--drp-primary);
   color: #fff;
   border-color: #000;
+}
+
+#presetGrid .btn.selected:hover {
+  background: var(--drp-primary);
+  filter: brightness(1.1);
+  color: #fff;
 }
 
 /* Divider */
@@ -256,7 +262,7 @@ body.admin-page {
 /* Footer */
 .footer {
   border-top: var(--border-bold);
-  background: #fff;
+  background: transparent;
 }
 
 /* Floating animation - more "bouncy" */
