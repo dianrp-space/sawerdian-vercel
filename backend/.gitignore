@@ -1,0 +1,5 @@
+# QRIS Backend
+
+node_modules/
+*.log
+.env

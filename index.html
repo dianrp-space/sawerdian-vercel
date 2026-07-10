@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SawerDian - Platform Saweran via QRIS</title>
+    <meta name="description" content="Sawer takewer-kewer via QRIS, werrr" />
+    <link rel="icon" type="image/webp" href="/images/favicon.webp" />
+
+    <!-- daisyUI 5 + Tailwind CSS v4 via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=2" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar bg-base-100/70 backdrop-blur-md sticky top-0 z-30 border-b border-base-300 justify-center">
+      <a href="/" class="btn btn-outline text-lg font-bold">
+        <span class="gradient-text">SawerDian</span>
+      </a>
+    </div>
+
+    <main class="sawer-container">
+      <!-- BANNER (optional) -->
+      <div id="bannerWrap" class="hidden mt-4 animate-fade-in-up">
+        <img id="creatorBanner" src="/images/banner.png" class="w-full h-32 sm:h-40 object-cover rounded-2xl shadow" alt="Banner" />
+      </div>
+
+      <!-- HERO -->
+      <section class="text-center py-6 animate-fade-in-up">
+
+        <div class="avatar animate-float">
+          <div class="w-28 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            <img id="creatorAvatar" src="/images/avatar.png" alt="Creator avatar" />
+          </div>
+        </div>
+        <h1 id="creatorName" class="text-3xl font-bold mt-4">Memuat...</h1>
+        <p id="creatorTagline" class="text-base-content/70 mt-2 max-w-md mx-auto">Memuat...</p>
+
+        <!-- Social links -->
+        <div id="socialLinks" class="flex flex-wrap justify-center gap-2 mt-4"></div>
+        
+        <!-- Top Sawer Link -->
+        <div class="mt-4 animate-fade-in-up animate-fade-in-up-d1">
+          <a href="/leaderboard" class="btn btn-outline">
+            <span aria-hidden="true" class="text-xl">🏆</span>
+            <span class="text-sm font-bold">Top Sawer Ranking</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- STATS RINGKAS -->
+      <section class="stats stats-vertical sm:stats-horizontal w-full bg-base-200/60 glass-card animate-fade-in-up animate-fade-in-up-d1 my-4">
+        <div class="stat py-3">
+          <div class="stat-title text-xs">Total Sawer</div>
+          <div class="stat-value text-2xl" id="statTotal">-</div>
+        </div>
+        <div class="stat py-3">
+          <div class="stat-title text-xs">Bulan Ini</div>
+          <div class="stat-value text-2xl text-primary" id="statMonth">-</div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start my-4">
+        <!-- Kiri: Form Pilih Nominal -->
+        <div class="space-y-4">
+          <!-- CARD PILIH NOMINAL -->
+          <section class="card bg-base-100 shadow-xl animate-fade-in-up animate-fade-in-up-d2">
+            <div class="card-body">
+              <h2 class="card-title text-lg flex items-center gap-2">
+                <span aria-hidden="true">💸</span> Pilih Nominal
+              </h2>
+
+              <div id="presetGrid" class="grid grid-cols-3 gap-2 mt-2">
+                <!-- Preset buttons will be inserted here -->
+              </div>
+
+              <div class="divider text-xs text-base-content/50 my-2">atau</div>
+
+              <!-- Custom amount + name + message -->
+              <div class="space-y-3">
+                <label class="floating-label">
+                  <span>Tentukan sendiri saweranmu (Rp)</span>
+                  <input
+                    type="number"
+                    id="customAmount"
+                    class="input input-bordered w-full"
+                    placeholder="💸 2000"
+                    min="2000"
+                    max="500000"
+                  />
+                </label>
+
+                <div class="divider text-xs text-base-content/50 my-2">Nama dan Pesan</div>
+
+                <div id="donorNameWrap" class="space-y-2">
+                  <label class="floating-label">
+                    <span>Namamu, random jika kosong</span>
+                    <input
+                      type="text"
+                      id="donorName"
+                      class="input input-bordered w-full"
+                      placeholder="contoh: Anonim"
+                      maxlength="100"
+                    />
+                  </label>
+                  <label class="label cursor-pointer justify-start gap-2 pt-0">
+                    <input type="checkbox" id="isAnonymous" class="checkbox checkbox-sm" />
+                    <span class="text-xs text-base-content/70 font-semibold">Tampilkan nama sebagai anonim di ranking</span>
+                  </label>
+                </div>
+
+                <label class="floating-label" id="messageWrap">
+                  <span>Pesan / dukungan (opsional)</span>
+                  <textarea
+                    id="message"
+                    class="textarea textarea-bordered w-full"
+                    placeholder="contoh: Semangat terus! 🚀"
+                    maxlength="500"
+                    rows="2"
+                  ></textarea>
+                </label>
+              </div>
+
+              <button id="sawerBtn" class="btn btn-primary btn-lg btn-block mt-4" disabled>
+                <span class="loading loading-spinner loading-sm hidden" id="btnLoading"></span>
+                <span id="btnText">Pilih nominal dulu</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Info -->
+          <p class="text-center text-xs text-base-content/50 animate-fade-in-up animate-fade-in-up-d3">
+            Pembayaran via QRIS • Didukung oleh semua e-wallet & mobile banking
+          </p>
+        </div>
+
+        <!-- Kanan: SECTION PESAN & KOMENTAR -->
+        <section id="commentsSection" class="card bg-base-100 shadow-xl animate-fade-in-up">
+          <div class="card-body p-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+              <h2 class="card-title text-lg flex items-center gap-2">
+                <span aria-hidden="true">💬</span> Pesan & Komentar
+              </h2>
+              <span id="commentsCount" class="text-xs text-base-content/50">Memuat...</span>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-3">
+              <button type="button" class="btn btn-xs btn-primary comment-period-btn" data-period="all">Semua</button>
+              <button type="button" class="btn btn-xs btn-outline comment-period-btn" data-period="today">Hari Ini</button>
+              <button type="button" class="btn btn-xs btn-outline comment-period-btn" data-period="month">Bulan Ini</button>
+            </div>
+
+            <div id="messagesList" class="space-y-2 mb-3">
+              <div class="skeleton h-12 w-full"></div>
+              <div class="skeleton h-12 w-full"></div>
+            </div>
+
+            <div class="text-center my-2">
+              <a href="/leaderboard" class="btn btn-outline btn-sm">
+                Lihat Semua Komentator »
+              </a>
+            </div>
+
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Toast notifications -->
+    <div id="toastContainer" class="toast toast-top toast-end z-50"></div>
+
+    <!-- Footer -->
+    <footer class="footer footer-center bg-base-200 text-base-content/60 p-4 text-xs mt-6">
+      <div>
+        <p id="footerText">© 2026 Dian Rama Putra. All rights reserved.</p>
+        <p class="opacity-60">Made with ❤️ by DRP</p>
+      </div>
+    </footer>
+
+    <script src="/assets/js/sawer.js?v=2"></script>
+    <script src="/assets/js/comments.js?v=2"></script>
+  </body>
+</html>
