@@ -7,6 +7,7 @@ export async function createQrisPayment({ referenceId, amount, fee = 0, expiresI
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${PAYMENT_API_KEY}`,
+      'User-Agent': 'Sawerdian/1.0',
     },
     body: JSON.stringify({ referenceId, amount, fee, expiresInMinutes }),
   });
@@ -22,6 +23,7 @@ export async function checkPaymentStatus({ referenceId, transactionId }) {
   const res = await fetch(`${PAYMENT_API_BASE}/v2/payment-status?${params}`, {
     headers: {
       'Authorization': `Bearer ${PAYMENT_API_KEY}`,
+      'User-Agent': 'Sawerdian/1.0',
     },
   });
   if (!res.ok) {
