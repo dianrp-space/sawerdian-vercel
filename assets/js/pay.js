@@ -170,6 +170,24 @@ function renderPayScreen(donation, qrImage, dynamicQris) {
 
   // Bind copy button
   document.getElementById('copyQrBtn').addEventListener('click', copyQrString);
+
+  // Bind cancel button
+  document.getElementById('cancelDonationBtn').addEventListener('click', cancelDonation);
+}
+
+async function cancelDonation() {
+  if (!confirm('Apakah Anda yakin ingin membatalkan transaksi ini?')) return;
+  const btn = document.getElementById('cancelDonationBtn');
+  btn.disabled = true;
+  btn.textContent = 'Membatalkan...';
+  try {
+    await api(`/api/donations/${state.token}/cancel`, { method: 'POST' });
+    handleExpiredOrCancelled({ status: 'cancelled' });
+  } catch (err) {
+    showToast(err.message || 'Gagal membatalkan transaksi', 'error');
+    btn.disabled = false;
+    btn.textContent = '✕ Batalkan Transaksi';
+  }
 }
 
 function startCountdown(expiresAt) {
@@ -181,6 +199,7 @@ function startCountdown(expiresAt) {
       el.textContent = '00:00:00';
       el.classList.add('text-error');
       clearInterval(state.countdownInterval);
+      handleTimeout();
       return;
     }
     const totalSec = Math.floor(diff / 1000);
@@ -191,6 +210,22 @@ function startCountdown(expiresAt) {
   }
   tick();
   state.countdownInterval = setInterval(tick, 1000);
+}
+
+function handleTimeout() {
+  if (state.pollingInterval) clearInterval(state.pollingInterval);
+  document.getElementById('pollingBadge').classList.add('hidden');
+  document.getElementById('qrTimeoutOverlay').classList.remove('hidden');
+  document.getElementById('qrContainer').classList.remove('qr-pulse');
+  document.getElementById('actionButtonsWrap').classList.add('hidden');
+  const cancelBtn = document.getElementById('cancelDonationBtn');
+  cancelBtn.textContent = '← Kembali ke Halaman Utama';
+  cancelBtn.className = 'btn btn-outline btn-sm w-full';
+  // Ubah listener cancel ke go back
+  cancelBtn.outerHTML = cancelBtn.outerHTML; // remove listener
+  document.getElementById('cancelDonationBtn').addEventListener('click', () => {
+    window.location.href = '/';
+  });
 }
 
 // ============================================
@@ -260,7 +295,21 @@ function handleExpiredOrCancelled(donation) {
   if (state.countdownInterval) clearInterval(state.countdownInterval);
   document.getElementById('pollingBadge').classList.add('hidden');
 
-  showError(`Donasi ini berstatus "${donation.status}". Silakan kembali membuat donasi baru.`);
+  document.getElementById('qrTimeoutOverlay').classList.remove('hidden');
+  document.getElementById('qrTimeoutOverlay').querySelector('span').textContent = donation.status === 'cancelled' ? '✕' : '✕';
+  document.getElementById('qrTimeoutOverlay').querySelector('.font-bold').textContent = donation.status === 'cancelled' ? 'Dibatalkan' : 'Waktu Habis';
+  document.getElementById('qrTimeoutOverlay').querySelector('.text-xs').textContent = donation.status === 'cancelled' ? 'Transaksi telah dibatalkan oleh pengguna' : 'Pembayaran gagal atau kedaluwarsa';
+  
+  document.getElementById('qrContainer').classList.remove('qr-pulse');
+  document.getElementById('actionButtonsWrap').classList.add('hidden');
+  
+  const cancelBtn = document.getElementById('cancelDonationBtn');
+  cancelBtn.textContent = '← Kembali ke Halaman Utama';
+  cancelBtn.className = 'btn btn-outline btn-sm w-full';
+  cancelBtn.outerHTML = cancelBtn.outerHTML; // remove listener
+  document.getElementById('cancelDonationBtn').addEventListener('click', () => {
+    window.location.href = '/';
+  });
 }
 
 // ============================================

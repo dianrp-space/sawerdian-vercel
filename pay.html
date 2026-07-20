@@ -86,14 +86,19 @@
             </div>
 
             <!-- QR Code -->
-            <div class="my-4">
-              <div class="bg-white p-4 rounded-3xl qr-pulse inline-block">
+            <div class="my-4 relative">
+              <div id="qrContainer" class="bg-white p-4 rounded-3xl qr-pulse inline-block relative">
                 <img id="payQrImage" src="" alt="QR Code Pembayaran" class="w-64 h-64 sm:w-72 sm:h-72 block" />
+                <div id="qrTimeoutOverlay" class="absolute inset-0 bg-base-100/90 backdrop-blur-xs rounded-3xl flex flex-col items-center justify-center hidden">
+                  <span class="text-error text-7xl">✕</span>
+                  <p class="text-error font-bold mt-2 text-lg">Waktu Habis</p>
+                  <p class="text-xs text-base-content/60 px-4 mt-1">Pembayaran gagal atau kedaluwarsa</p>
+                </div>
               </div>
             </div>
 
             <!-- Countdown -->
-            <div class="flex items-center justify-center gap-1 text-sm text-base-content/70">
+            <div id="countdownWrap" class="flex items-center justify-center gap-1 text-sm text-base-content/70">
               <span>QR aktif selama</span>
               <span class="countdown-num font-mono font-semibold text-primary" id="payCountdown">--:--:--</span>
             </div>
@@ -107,13 +112,19 @@
             </div>
 
             <!-- Action buttons -->
-            <div class="grid grid-cols-2 gap-2 mt-4 w-full">
+            <div id="actionButtonsWrap" class="grid grid-cols-2 gap-2 mt-4 w-full">
               <button id="copyQrBtn" class="btn btn-outline btn-sm">
                 <span aria-hidden="true">📋</span> Copy QR String
               </button>
               <a id="downloadQrBtn" class="btn btn-outline btn-sm" download="qris-donation.png">
                 <span aria-hidden="true">⬇</span> Download QR
               </a>
+            </div>
+
+            <div id="cancelButtonWrap" class="mt-4 w-full">
+              <button id="cancelDonationBtn" class="btn btn-error btn-outline btn-sm w-full">
+                ✕ Batalkan Transaksi
+              </button>
             </div>
 
             <!-- Instructions -->

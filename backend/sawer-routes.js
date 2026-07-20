@@ -265,6 +265,25 @@ router.get('/api/donations/:token', async (req, res) => {
   }
 });
 
+router.post('/api/donations/:token/cancel', async (req, res) => {
+  try {
+    const { token } = req.params;
+    const res1 = await query(`SELECT id, status FROM donations WHERE qr_token = $1`, [token]);
+    if (res1.rows.length === 0) {
+      return res.status(404).json({ error: 'Donasi tidak ditemukan' });
+    }
+    const donation = res1.rows[0];
+    if (donation.status === 'pending') {
+      await query(`UPDATE donations SET status = 'cancelled' WHERE id = $1`, [donation.id]);
+      return res.json({ ok: true, message: 'Donasi dibatalkan' });
+    }
+    res.status(400).json({ error: `Tidak bisa membatalkan donasi berstatus ${donation.status}` });
+  } catch (err) {
+    console.error('POST /api/donations/:token/cancel error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 router.post('/api/donations/:token/paid', async (req, res) => {
   try {
     const { token } = req.params;
