@@ -94,7 +94,10 @@ app.use(
       }
       // [SECURITY] Di production: WAJIB set ALLOWED_ORIGIN.
       // Kalau kosong, semua cross-origin request ditolak.
-      if (allowedOrigins.length > 0 && allowedOrigins.includes(origin)) {
+      if (
+        allowedOrigins.length > 0 &&
+        (allowedOrigins.includes(origin) || allowedOrigins.includes('*'))
+      ) {
         return callback(null, true);
       }
       callback(new Error('CORS not allowed'));

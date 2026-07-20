@@ -46,7 +46,10 @@ app.use(cors({
         return callback(null, true);
       }
     }
-    if (allowedOrigins.length > 0 && allowedOrigins.includes(origin)) {
+    if (
+      allowedOrigins.length > 0 &&
+      (allowedOrigins.includes(origin) || allowedOrigins.includes('*'))
+    ) {
       return callback(null, true);
     }
     callback(new Error('CORS not allowed'));
