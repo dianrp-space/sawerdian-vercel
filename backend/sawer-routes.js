@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { query } from './db.js';
 import { dispatchWebhooks } from './webhook.js';
 import { safeEqual } from './auth.js';
-import { createQrisPayment, checkPaymentStatus } from './payment.js';
+import { createQrisPayment, checkPaymentStatus, cancelQrisPayment } from './payment.js';
 import {
   donationLimiter,
   commentLimiter,
@@ -268,12 +268,19 @@ router.get('/api/donations/:token', async (req, res) => {
 router.post('/api/donations/:token/cancel', async (req, res) => {
   try {
     const { token } = req.params;
-    const res1 = await query(`SELECT id, status FROM donations WHERE qr_token = $1`, [token]);
+    const res1 = await query(`SELECT id, status, reference_id FROM donations WHERE qr_token = $1`, [token]);
     if (res1.rows.length === 0) {
       return res.status(404).json({ error: 'Donasi tidak ditemukan' });
     }
     const donation = res1.rows[0];
     if (donation.status === 'pending') {
+      if (process.env.PAYMENT_API_KEY) {
+        try {
+          await cancelQrisPayment({ referenceId: donation.reference_id || token });
+        } catch (paymentErr) {
+          console.error('Payment API cancel error:', paymentErr.message);
+        }
+      }
       await query(`UPDATE donations SET status = 'cancelled' WHERE id = $1`, [donation.id]);
       return res.json({ ok: true, message: 'Donasi dibatalkan' });
     }
